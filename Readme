@@ -1,0 +1,104 @@
+# متجر إلكتروني - Ecommerce Platform
+
+مرحبًا! هذا مشروع **متجر إلكتروني متكامل** مبني باستخدام **Laravel 12 + Livewire + Tailwind CSS + Vite**.  
+المشروع يحتوي على لوحة إدارة، نظام منتجات، فئات، سلة مشتريات، مراجعات وتقييمات، وميزات الدفع الإلكتروني.
+
+---
+
+## 🛠️ التقنيات المستخدمة
+- **Backend:** Laravel 12, PHP 8.4  
+- **Frontend:** Blade Templates, Livewire, Tailwind CSS, Alpine.js  
+- **Database:** MySQL  
+- **Build Tools:** Vite  
+- **Version Control:** Git & GitHub  
+
+---
+
+## 🚀 الميزات
+- تسجيل حساب وتسجيل دخول (مستخدم وعارض Admin)  
+- CRUD للفئات والمنتجات  
+- عرض المنتجات حسب الفئات  
+- نظام سلة مشتريات وإتمام الطلبات (Checkout)  
+- التقييم والمراجعات للمنتجات  
+- لوحة إدارة متكاملة للمنتجات والفئات والطلبات  
+- واجهة تفاعلية باستخدام Livewire + Alpine.js  
+- إدارة CSS و JS عبر Tailwind + Vite  
+
+---
+
+## 💾 خطوات التشغيل
+
+1. **نسخ المشروع وتشغيل Composer:**
+```bash
+git clone https://github.com/Abdooh5/ecommerce-platform.git
+cd ecommerce-platform
+composer install
+cp .env.example .env
+php artisan key:generate
+إعداد قاعدة البيانات:
+
+عدّل .env وأدخل بيانات قاعدة البيانات:
+
+env
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ecommerce_db
+DB_USERNAME=root
+DB_PASSWORD=
+ثم شغّل:
+
+bash
+
+php artisan migrate --seed
+تثبيت الحزم الخاصة بالـ frontend:
+
+bash
+نسخ الكود
+npm install --legacy-peer-deps
+npm run dev        # لتشغيل Vite Dev Server
+# أو
+npm run build      # لإنشاء الملفات النهائية قبل النشر
+تشغيل Laravel:
+
+bash
+نسخ الكود
+php artisan serve
+افتح المتصفح على: http://127.0.0.1:8000
+
+📂 هيكل المشروع
+csharp
+
+app/
+├─ Models/       # Models للمنتجات، الفئات، الطلبات، المراجعات
+├─ Http/Controllers/  # Controllers
+resources/
+├─ views/        # صفحات Blade
+├─ css/          # Tailwind CSS
+├─ js/           # Alpine.js / Livewire
+public/
+├─ build/        # ملفات Vite النهائية
+📌 ملاحظات
+استخدم npm run dev أثناء التطوير لمشاهدة التغييرات مباشرة.
+
+استخدم npm run build قبل النشر لإنتاج ملفات ثابتة لـ Vite.
+
+على Windows، إذا ظهرت تحذيرات عن CRLF، فهي طبيعية ويمكن تجاهلها.
+
+🔗 الروابط
+GitHub Repository
+
+البريد الإلكتروني: abdoohbarbood@gmail.com
+
+🎯 الهدف
+هذا المشروع مثال ممتاز لتعلم Laravel + Livewire + Tailwind + Vite، وتطبيق Version Control مع Git/GitHub أثناء تطوير مشروع كامل من الصفر.
+د
+
+
+
+
+
+
+
+
