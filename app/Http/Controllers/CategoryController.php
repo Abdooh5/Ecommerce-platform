@@ -12,7 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories=Category::latest()->paginate(15);
+        return response()->json($categories);
     }
 
     /**
@@ -28,7 +29,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
+            
+        ]);
+       $validatedData['slug'] = str()->slug($request->name, '-');
+        $category = Category::create($validatedData);
+        return response()->json($category, 201);
     }
 
     /**
@@ -36,7 +43,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json($category);
     }
 
     /**
@@ -52,7 +59,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
+        ]);
+        $validatedData['slug'] = str()->slug($request->name, '-');
+        $category->update($validatedData);
+        return response()->json($category);
     }
 
     /**
@@ -60,6 +72,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json(['message' => 'Category deleted successfully'], 200);
     }
 }
