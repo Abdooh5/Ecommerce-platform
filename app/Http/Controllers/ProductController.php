@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         $page = request()->get('page', 1);
         $products = Cache::remember('products_page_' . $page, 3600, function () {
-            return Product::with('category', 'reviews')->paginate(15);
+            return Product::with('category', 'reviews')->paginate(10);
         });
 
         return ProductResource::collection($products);
