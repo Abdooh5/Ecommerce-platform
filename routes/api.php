@@ -47,5 +47,8 @@ Route::middleware(['auth:sanctum', 'CheckAdmin'])->group(function () {
     Route::post('products', [ProductController::class, 'store']);
     Route::put('products/{product}', [ProductController::class, 'update']);
     Route::delete('products/{product}', [ProductController::class, 'destroy']);
+    Route::put('orders/{order}/status', [OrderController::class, 'changeStatus']);
+    Route::get('statistics', [OrderController::class, 'adminStatistics']);
+
 
 });
