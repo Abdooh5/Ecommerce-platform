@@ -19,7 +19,7 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Review::class);
+       $this->authorize('viewAny', Review::class);
         $reviews = Review::latest()->paginate(25);
         return response()->json($reviews);
     }

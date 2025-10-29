@@ -15,8 +15,7 @@ class ReviewPolicy
         //
     }
     public function viewAny(User $user)
-    {
-        // Allow viewing any reviews for authenticated users
+    {// Allow viewing reviews for authenticated users
         return $user !== null;
     }
     public function view(User $user, Review $review)
