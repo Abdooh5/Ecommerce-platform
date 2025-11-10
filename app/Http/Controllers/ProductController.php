@@ -22,10 +22,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $page = request()->get('page', 1);
-        $products = Cache::remember('products_page_' . $page, 3600, function () {
-            return Product::with('category', 'reviews')->paginate(10);
-        });
+    //     $page = request()->get('page', 2);
+    //     $products = Cache::remember('products_page_' . $page, 3600, function () {
+    //         return Product::with('category', 'reviews')->paginate(10);
+    //     });
+
+        $products = Product::with('category', 'reviews')->get();
 
         return ProductResource::collection($products);
     }
@@ -158,22 +160,24 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(null, 200);
     }
-    public function Products_By_Category(Category $category)
+    public function Products_By_Category(string $categorySlug)
     {
         try {
-            $category = Category::findOrFail($category->id);
+            $category = Category::where('slug', $categorySlug)->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Failed to retrieve category',
                 'error' => $e->getMessage(),
             ], 404);
+
         }
         $products = Product::where('category_id', $category->id)->with('category', 'reviews')->get();
         return ProductResource::collection($products);
     }
     public function Search_product(Request $request)
     {
-        $searchTerm = $request->input('search');
+        $searchTerm = $request->query('query', $request->input('search'));
+
 
         $products = Product::where('name', 'like', "%{$searchTerm}%")
             ->orWhere('description', 'like', "%{$searchTerm}%")

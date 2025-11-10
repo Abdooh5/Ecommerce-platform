@@ -53,41 +53,49 @@ class OrderController extends Controller
             'orders' => $orders,
         ]);
     }
+
+
+
     public function adminStatistics()
-{
-    $this->authorize('viewAny', Order::class);
+    {
+        $this->authorize('viewAny', Order::class);
 
-    $stats = [
-        'total_users' => User::count(),
-        'total_orders' => Order::count(),
-        'total_sales' => Order::whereNotIn('status', ['cancelled'])->sum('total_amount'),
-        'pending' => Order::where('status', 'pending')->count(),
-        'processing' => Order::where('status', 'processing')->count(),
-        'shipped' => Order::where('status', 'shipped')->count(),
-        'delivered' => Order::where('status', 'delivered')->count(),
-        'canceled' => Order::where('status', 'canceled')->count(),
-    ];
+        $stats = [
+            'total_users' => User::count(),
+            'total_orders' => Order::count(),
+            'total_products' => Product::count(),
+            'total_sales' => Order::whereNotIn('status', ['cancelled'])->sum('total_amount'),
+            'pending' => Order::where('status', 'pending')->count(),
+            'processing' => Order::where('status', 'processing')->count(),
+            'shipped' => Order::where('status', 'shipped')->count(),
+            'delivered' => Order::where('status', 'delivered')->count(),
+            'canceled' => Order::where('status', 'canceled')->count(),
+        ];
 
-    return response()->json([
-        'stats' => $stats
-    ]);
-}
+        return response()->json([
+            'stats' => $stats
+        ]);
+    }
 
 
     public function index()
     {
         $user = Auth::user();
-        $this->authorize('viewAny', Order::class);
+      // $this->authorize('view', $user);
 
-        $page = request()->get('page', 1);
-        $orders = Cache::remember('orders_user_' . $user->id . '_page_' . $page, 3600, function () use ($user) {
-            return Order::with('orderItems.product')
-                ->where('user_id', $user->id)
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
-        });
+        // $page = request()->get('page', 1);
+        // $orders = Cache::remember('orders_user_' . $user->id . '_page_' . $page, 3600, function () use ($user) {
+        //     return Order::with('orderItems.product')
+        //         ->where('user_id', $user->id)
+        //         ->orderBy('created_at', 'desc')
+        //         ->paginate(10);
+        // });
+
+
+        $orders=Order::where('user_id',$user->id)->with('user')->get();
         return response()->json([
             'orders' => $orders
+
         ]);
     }
 
@@ -111,9 +119,10 @@ class OrderController extends Controller
         $itemsInput = $request->input('items');
         $shippingAddress = $request->input('shipping_address', null);
         $paymentMethod = $request->input('payment_method', null);
-
+        $latitude=$request->input('lat',null);
+        $longitude=$request->input('lng',null);
         // استخدم transaction + row locking لتأمين الكميات
-        $order = DB::transaction(function () use ($user, $itemsInput, $shippingAddress, $paymentMethod) {
+        $order = DB::transaction(function () use ($user, $itemsInput, $shippingAddress, $paymentMethod,  $latitude,$longitude) {
 
             // جمع product_ids المطلوبة
             $productIds = collect($itemsInput)->pluck('product_id')->unique()->values()->all();
@@ -168,6 +177,8 @@ class OrderController extends Controller
                 'total_amount' => $total,
                 'shipping_address' => $shippingAddress,
                 'payment_method' => $paymentMethod,
+                'lat'=>$latitude,
+                'lng'=>$longitude
             ]);
 
             // إنشاء Order Items وتحديث المخزون

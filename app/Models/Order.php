@@ -10,7 +10,7 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
-    protected $fillable=['user_id', 'total_amount', 'status'];
+    protected $fillable=['user_id', 'total_amount', 'status','lat','lng','shipping_address','payment_method'];
     public function user()
     {
         return $this->belongsTo(User::class);
