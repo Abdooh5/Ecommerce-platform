@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StripePaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
@@ -59,9 +60,11 @@ Route::get('products/category/{category}', [ProductController::class, 'Products_
 Route::get('categories', [CategoryController::class, 'index']);
 // البحث عن منتج
 Route::get('search/products/', [ProductController::class, 'Search_product']);
+Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+
 
 Route::middleware(['auth:sanctum', 'CheckAdmin'])->group(function () {
-
+   
     // عرض جميع المستخدمين
     Route::get('users', [UserController::class, 'userindex']);
     // عرض جميع الطلبات (للمسؤول)
