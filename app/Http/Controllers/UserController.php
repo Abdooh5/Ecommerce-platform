@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -59,6 +60,20 @@ class UserController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json(['message' => 'Logged out successfully']);
+
+    }
+        public function userIndex()
+    {
+        $user = Auth::user();
+
+// if (!$user || $user->role !== 'admin') {
+//     return response()->json(['message' => 'Unauthorized'], 401);
+// }
+        $page = request()->get('page', 1);
+        $users=user::paginate(25);
+        return response()->json([
+            'users' => $users
+        ]);
 
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StripePaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
@@ -50,7 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // عرض جميع المراجعات
 Route::get('reviews', [ReviewController::class, 'index']);
 // عرض جميع المنتجات
-Route::get('products', [ProductController::class, 'index']);
+Route::get('products', [ProductController::class, 'index'])->name('api.products.index');
 // عرض منتج واحد
 Route::get('products/{product}', [ProductController::class, 'show']);
 // تصفية المنتجات حسب الفئة
@@ -58,15 +59,26 @@ Route::get('products/category/{category}', [ProductController::class, 'Products_
 // عرض جميع الفئات
 Route::get('categories', [CategoryController::class, 'index']);
 // البحث عن منتج
-Route::get('products/search', [ProductController::class, 'Search_product']);
+Route::get('search/products/', [ProductController::class, 'Search_product']);
+Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
+
 
 Route::middleware(['auth:sanctum', 'CheckAdmin'])->group(function () {
+   
     // عرض جميع المستخدمين
-    Route::get('users', [UserController::class, 'index']);
+    Route::get('users', [UserController::class, 'userindex']);
     // عرض جميع الطلبات (للمسؤول)
-    Route::get('allorders/admin', [OrderController::class, 'adminIndex']);
+    Route::get('All_orders/admin', [OrderController::class, 'adminIndex']);
     // إدارة الفئات
-    Route::apiResource('categories', CategoryController::class);
+   // Route::apiResource('categories', CategoryController::class);
+   //عرض جميع الفئات
+ 
+   // إنشاء فئة جديدة
+   Route::post('categories', [CategoryController::class, 'store']);
+   // تحديث فئة
+   Route::put('categories/{category}', [CategoryController::class, 'update']);
+   // حذف فئة
+   Route::delete('categories/{category}', [CategoryController::class, 'destroy']);
     // ---------------إدارة المنتجات----------------
 
     // إنشاء منتج جديد
